@@ -1,0 +1,94 @@
+整改意见：
+
+二哥提供：
+1，// 鼠标移入停止动画    Slide.prototype.mouseenter 
+   LGY：此类的方法命名要注意，你slider的行为要和外部条件隔离。
+        需要“当鼠标移入时候，停止”的意思，尽量在组件外部挂载。
+        组件只提供“停止”的功能，鼠标移入时停止，这个可以在外部指定。
+   
+
+2，this.nextBtn.on('click', ...  this.nextBtn.on('click' , ...
+   LGY：这些是切换按钮点击后的触发。这里面要先判断当前动画是否正在运行中，否则你的动画会抖动。
+
+   YR：//这个场景是不会的，因为，click的时候，已经有mouseenter时间，动画已经停止。
+
+
+3，findLiIndex 
+   LGY：这个命名太具象了。如果你的动画元素是a或者其他什么的，你的命名就不合适了。
+
+
+4，this.mouseenter();
+   this.mouseout();
+   this.nextMove();
+   this.preMove();
+
+   LGY：这四个方法命名和实现不爽，就像第一条说法一样，一定把内部动作和影响它的外部条件隔离开来。这四个方法实际上是要绑定动作和对应的响应事件。建议的做法：
+
+   1） 分别实现响应实现。
+   2） 为了实现易用性，用一个集中的方法绑定事件。
+   3） 举个例子：
+       下翻可以定义方法：
+
+       Slide.prototype.next = function() {
+            _this.move(_this.fouseNum+1);
+            _this.listMove('right');
+       }
+
+       然后设定绑定方法：
+       Slide.prototype.bindEvent = function(){
+            var _this = this;
+
+            /* 绑定下翻事件 */
+            this.left.on('click' , function(){
+                _this.next();
+            });
+
+            /* 绑定上翻事件 */
+            this.right.on('click' , function(){
+                _this.prev();
+            });           
+       }
+
+       在init方法里，就可以直接
+       this.bindEvent(); 
+
+       想想好处是什么?
+      //？？？看起来比较整齐?init,只需要调用一个函数。
+
+5，之所以不能实现左移，是因为开始时，头一个元素并无前导元素，你需要在开头append最后一个滚动元素，才可以。
+
+陈建提供：
+1.next_btn=W('.btn-next')
+  //这里传入class不太合理，万一，页面里面还有其他的用了这个class元素，会产生影响。存入js的节点，不在特殊情况下，一般最好用id，class一般是已做布局的时候，也有用作js的class，可以以 js-***命名。
+
+2.把对象，写成一个闭包函数。
+1)变量私有，避免使用this和原型链。
+2）压缩后的体积会更小一点。
+
+var elSlide=new Slide(wraper,next_btn,next_prev,ul_content,{firstShow:4});
+  elSlide.init();
+
+//写成下面这种形式。
+  window.Slide({
+    wraperBox:wraper,
+    nextBtn:next_btn,
+    preBtn:prev_btn,
+    panel:ul_content,
+    nav:nav,
+    showIndex:1
+  }); 
+
+3. 下面的列表导航， 最好不用用js动态生成。因为会导致，li不好控制，比如li里面要写的是图片。
+Slide.prototype.createList=function(){
+    var liLength=this.wraperBox.query('ul li').length,
+      _this=this;
+     for (var i =0; i < liLength; i++) {
+      var createLi=Dom.createElement('li');
+      W(createLi).appendTo(this.ulList);
+     };
+     W(this.ulList.query('li')[_this.firstShow]).addClass('on');
+  };
+
+4.给放图片的li，和放列表的li一个统一对应的属性，方便做整体的调用控制，而不是，分开控制动画。
+<li class="focus-poster" data-index="5"></li>
+<li class="" data-index="1"></li>

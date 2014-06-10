@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<style>
+
+/*小说slide样式*/
+/*全局*/
+*{margin: 0;padding: 0;}
+li{list-style: none;}
+img{border: none;}
+
+
+#focus {margin: 0 auto;position: relative;width: 1000px;}
+#focus .focus-bar-box{position: relative;width: 1000px;height: 255px;overflow: hidden;}
+#focus .focus-bar {width: 5000px;height: 255px;margin-left: 0;}
+#focus .focus-bar .focus-poster {float: left;position: relative;width: 1000px;height: 255px;}
+#focus .focus-bar .focus-poster a.le-hint{position: absolute;color: #fff;}
+#focus .focus-bar .item1{top: 0;left: 0;width: 550px;height: 256px;}
+#focus .focus-bar .item2{top: 0;left: 555px;width: 200px;height: 126px;}
+#focus .focus-bar .item3{top: 131px;left: 555px;width: 200px;height: 126px;}
+#focus .focus-bar .item4{top: 0;left: 760px;width: 240px;height: 256px;}
+#focus .focus-bar .le-hintbg{position:absolute;bottom: 0;left: 0;height: 35px;line-height: 35px;font-size: 14px;font-weight: bold;background: #000;opacity: .6;filter: alpha(opacity=60);width: 100%}
+#focus .focus-bar .focus-poster .small-icon{position: absolute;left: 5px;bottom: 5px;
+	background: url(http://p4.qhimg.com/t019e2a9cd907f487f9.png);width: 35px;height: 35px;  _background: 0;
+	 _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=image,src="http://p4.qhimg.com/t019e2a9cd907f487f9.png");}
+#focus .focus-bar a:hover {_zoom:1;}
+.le-hint:after {z-index: 2;top: 0;left: 0;width: 100%;height: 100%;content: '';background: rgba(0,0,0,.3) url(http://p5.qhimg.com/d/_hao360/video/bgimg/btn.png) no-repeat center;cursor: pointer;visibility: visible;
+}
+
+#focus .btn-prev, #focus .btn-next {position: absolute;top: 75px;width: 40px;height: 80px;z-index: 2;}
+#focus .btn-prev {left: 0;background: url(http://p6.qhimg.com/t01e88b60b84029bc96.png) no-repeat;_background: 0;
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=image,src="http://p6.qhimg.com/t01e88b60b84029bc96.png");
+}
+#focus .btn-next {right: 0;background: url(http://p0.qhimg.com/t01cb2048b287b1668f.png) no-repeat;_background: 0;
+_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=image,src="http://p0.qhimg.com/t01cb2048b287b1668f.png");}
+
+.list{position: absolute;top: 255px;left: 0;background-color: #4c4c4c;width: 100%;margin-right: -10px;height: 20px;}
+.list li{float: left;background-color: #ccc;margin-right: 10px;width: 30px;height: 8px;line-height: 20px;position: relative;}
+.list li.on{background-color: #06b5e5;}
+.num{position: absolute;left: 0px;right: 0;font-size: 60px;color: red;}
+
+</style>
+</head>	
+
+<body>
+<div id="focus" monitor-desc="头部焦点图">
+			<div class="focus-bd">
+				<div class="focus-bar-box" id="focus-bar-box">
+					<ul class="focus-bar clearfix" id="focus-bar">
+						<li class="focus-poster  " data-index='1'>
+							<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
+							<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg">
+							</a>
+							<a href="/tv/RLlxb3OqRWbsNX.html" class="item4 le-hint">
+							<img src="http://p7.qhimg.com/t0145bc4bebba2f2f76.jpg">
+							</a>
+							<a class="num">1</a>
+						</li>
+						<li class="focus-poster sedcond" data-index='2'>
+							<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
+							<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg">
+							
+				            </a>
+							<a href="/tv/Qrdpc3WpTzHoMX.html" class="item2 le-hint">
+							<img src="http://p0.qhimg.com/t017c1144fef92655cf.jpg">
+							
+							</a>
+							<a href="/tv/RLlxb3OqRWbsNX.html" class="item4 le-hint">
+							<img src="http://p7.qhimg.com/t0145bc4bebba2f2f76.jpg">
+							
+							</a>
+							<a class="num">2</a>
+						</li>
+						<li class="focus-poster third" data-index='3'>
+							<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
+							<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg">
+							
+				            </a>
+							<a href="/tv/Qrdpc3WpTzHoMX.html" class="item2 le-hint">
+							<img src="http://p0.qhimg.com/t017c1144fef92655cf.jpg">
+							</a>
+							<a href="/tv/RLlxb3OqRWbsNX.html" class="item4 le-hint">
+							<img src="http://p7.qhimg.com/t0145bc4bebba2f2f76.jpg">
+							
+							</a>
+							<a class="num">3</a>
+						</li>
+						<li class="focus-poster" data-index='4'>
+							<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
+							<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg">
+							
+				            </a>
+							<a href="/tv/Qrdpc3WpTzHoMX.html" class="item2 le-hint">
+							<img src="http://p0.qhimg.com/t017c1144fef92655cf.jpg">
+							</a>
+							<a href="/tv/RLlxb3OqRWbsNX.html" class="item4 le-hint">
+							<img src="http://p7.qhimg.com/t0145bc4bebba2f2f76.jpg">
+							
+							</a>
+							<a class="num">4</a>
+
+						</li>
+						<li class="focus-poster" data-index='5'>
+							<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
+							<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg">
+							
+				            </a>
+							<a href="/tv/Qrdpc3WpTzHoMX.html" class="item2 le-hint">
+							<img src="http://p0.qhimg.com/t017c1144fef92655cf.jpg">
+							</a>
+							<a href="/tv/RLlxb3OqRWbsNX.html" class="item4 le-hint">
+							<img src="http://p7.qhimg.com/t0145bc4bebba2f2f76.jpg">
+							
+							</a>
+							<a class="num">5</a>
+						</li>
+					</ul>
+				</div>
+				<a href="" class="btn-prev" onclick="return false;" hidefocus="" id="focus-prev"></a>
+				<a href="" class="btn-next" onclick="return false;" hidefocus="" id="focus-next"></a>
+				<ul class="list" id="focus-change">
+					<li class="" data-index="1"></li>
+					<li class="" data-index="2"></li>
+					<li class="" data-index="3"></li>
+					<li class="" data-index="4"></li>
+					<li class="" data-index="5"></li>
+				</ul>	
+			</div>
+			<!-- <div class="box"></div> -->
+			
+	<script src="http://s0.qhimg.com/lib/qwrap/113.js"></script>
+	<!--<script type="text/javascript" src="qwrap-sliders.js"></script>-->
+	<script type="text/javascript" src="qwrap-sliders-myself-1.2.js"></script>
+	<script>
+
+	var wraper=W('#focus'),
+	//这里传入class不太合理，万一，页面里面还有其他的用了这个class元素，会产生影响。存入js的节点，不在特殊情况下，一般最好用id，class一般是已做布局的时候，用的，
+	 	next_btn=W('#focus-next'),
+	 	next_prev=W('#focus-prev'),
+	 	ul_content=W('#focus-bar');
+
+	 	
+ 	var elSlide=new Slide(wraper,next_btn,next_prev,ul_content,{firstShow:4});
+ 	elSlide.init();
+
+ 
+	</script>
+</div>
+</body>
+</html>
