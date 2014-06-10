@@ -1,4 +1,4 @@
 slide
 =====
 
-slide-js
+第一版Slider
