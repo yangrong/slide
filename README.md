@@ -1,4 +1,4 @@
 slide
 =====
 
-第一版Slider
+第一版Slider完毕
