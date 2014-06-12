@@ -1,25 +1,21 @@
 /******
+
 从qwrap 移至jquery，修改1.1.1大家建议的修改点，完成向左移，向右移的两边的动画，用插入当前画面的前面或者后面，解决1.3版本出现的从1——5快速滑动，太快，有点晕。
 
-动画原理：
-1.向右移动是，把元素插入当前元素的前面，再右移动
-1） 判断要插入当前的元素是否是从当前元素的左边插入左边（最靠近当前元素的位置）,如，直接跳过重新定义，margin-left的值。
-2） 如果是从当前的元素的右边插入左边，margin-left相对原来的位置，margin—left+=一个li的width。
+此版本修复上一个版本遗留下的bug。
+1.nav列表菜单在快速移动的时候，不能准确定位(已经修复)
+2.鼠标移入一出的时候，setInterval和clearInterval显示混乱(已经修复)
+3. 3>1>2>3 ul整体移出1000px，（已修复）
+4. 修复向左移动，下一个移入的元素，原来的位置在当前元素的前面，插入当前元素的后面。（已修复）
+新功能：
+1. 添加首次选中功能。
+2. 上翻，下翻按钮移入显示。
 
-2.向左运动，把元素插入当前元素的后面，再左移动
-1） 因为是向后插入，
+*****/
 
-
-此版本遗留下的bug：
-1.nav列表菜单在快速移动的时候，不能准确定位
-2.鼠标移入一出的时候，setInterval和clearInterval显示混乱
-
-
-
-****/
 (function() {
-	function Slide(wraperBox, next, pre, ulcontent, ulNavlist, wraper,opt) {
-		this.wraper=wraper;
+	function Slide(wraperBox, next, pre, ulcontent, ulNavlist, wraper, opt) {
+		this.wraper = wraper;
 		this.wraperBox = wraperBox;
 		this.nextBtn = next;
 		this.preBtn = pre;
@@ -46,31 +42,38 @@
 			fouseNum: 0,
 			speed: 3000,
 			autoplay: true,
-			hasList: true,
+			hasList: true
 		};
 		return $.extend(this.option, options || {})
 	};
 	//向右运动
-	Slide.prototype.rightMove = function(index) {
-		
-		if (index > this.ulContentLi.length - 1) index = 0;
-		console.log('fouseNum:',this.fouseNum,'index:',index);
-		
+	Slide.prototype.firstShow = function(index) {
 		var _this = this;
-		
+		this.ulContent.css('margin-left', '-' + index * _this.cellwidth + 'px');
+		_this.changeClass(_this.fouseNum, 'on');
+
+	}
+	Slide.prototype.rightMove = function(index) {
+
+		if (index > this.ulContentLi.length - 1) index = 0;
+		console.log('fouseNum:', this.fouseNum, 'index:', index);
+
+		var _this = this;
+
 		if (_this.switch_slide) {
-			_this.switch_slide = false;
+			// _this.switch_slide = false;
 			var nowUl = this.ulContent.find('li');
 			var fouseNumleft = nowUl.index(this.ulContentLi[_this.fouseNum]);
 			// console.log('fouseNumindex', fouseNumleft);
 			var nextNumleft = nowUl.index(this.ulContentLi[index]);
 			// console.log('nextNumindex', nextNumleft);
 
+
 			$(this.ulContentLi[index]).insertBefore(this.ulContentLi[_this.fouseNum]);
 			if (fouseNumleft < nextNumleft) {
-				this.ulContent.css('margin-left', '-' + _this.cellwidth + 'px');
+				var changeLeft = parseInt(this.ulContent.css('margin-left')) - parseInt(_this.cellwidth);
+				this.ulContent.css('margin-left', changeLeft + 'px');
 			}
-
 			_this.fouseNum = index;
 			this.ulContent.animate({
 				'margin-left': '+=' + _this.cellwidth + 'px'
@@ -85,14 +88,19 @@
 	Slide.prototype.leftMove = function(index) {
 		var _this = this;
 		if (index < 0) index = this.ulContentLi.length - 1;
-		console.log('fouseNum:',_this.fouseNum,'index:',index);
-		
+		console.log('fouseNum:', _this.fouseNum, 'index:', index);
+
 		if (this.switch_slide) {
-			_this.switch_slide = false;
+			// _this.switch_slide = false;
+			var nowUl = this.ulContent.find('li');
+			var fouseNumleft = nowUl.index(this.ulContentLi[_this.fouseNum]);
+			// console.log('fouseNumindex', fouseNumleft);
+			var nextNumleft = nowUl.index(this.ulContentLi[index]);
+			// console.log('nextNumindex', nextNumleft);
 			$(this.ulContentLi[index]).insertAfter(this.ulContentLi[_this.fouseNum]);
-			var curMarginLeft = this.ulContent.css('margin-left');
-			if (parseInt(curMarginLeft) == -parseInt(this.cellwidth) * (this.Lilength - 1)) {
-				this.ulContent.css('margin-left', '-' + parseInt(this.cellwidth) * (this.Lilength - 2) + 'px');
+			if (fouseNumleft > nextNumleft) {
+				var changeLeft = parseInt(this.ulContent.css('margin-left')) + parseInt(_this.cellwidth);
+				this.ulContent.css('margin-left', changeLeft + 'px');
 			}
 
 			this.fouseNum = index;
@@ -123,12 +131,13 @@
 		var _this = this;
 		// 点击按钮向上翻
 		_this.preBtn.on('click', function() {
-			clearInterval(_this.t);
+			_this.ulContent.stop(true,true);
 			_this.leftMove(_this.fouseNum - 1);
 		})
 		// 点击按钮向下翻
 		_this.nextBtn.on('click', function() {
-			clearInterval(_this.t);
+			_this.ulContent.stop(true,true);
+			
 			_this.rightMove(_this.fouseNum + 1);
 		})
 
@@ -136,18 +145,23 @@
 		// 鼠标移入停止动画
 		_this.wraper.on('mouseenter', function() {
 			clearInterval(_this.t);
+			_this.preBtn.show();
+			_this.nextBtn.show();
+
 		})
 
 		// 鼠标移出开始动画
 
 		_this.wraper.on('mouseleave', function() {
 			_this.doSlide();
+			_this.preBtn.hide();
+			_this.nextBtn.hide();
 		});
 
 		//鼠标移入nav的li
 
 		_this.navli.on('mouseenter', function() {
-			clearInterval(_this.t);
+			_this.ulContent.stop(true,true);
 			var curli = _this.ulList.find('.on')
 			var preindex = _this.navli.index(curli);
 			// console.log(preindex);
@@ -157,8 +171,6 @@
 				_this.rightMove(parseInt(curindex));
 			} else if (preindex > curindex) {
 				_this.leftMove(parseInt(curindex));
-			} else {
-				return;
 			}
 		})
 
@@ -173,7 +185,7 @@
 	Slide.prototype.init = function() {
 
 		var _this = this;
-
+		_this.firstShow(_this.fouseNum);
 		if (_this.autoplay) {
 			_this.doSlide();
 		}
