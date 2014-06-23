@@ -15,7 +15,7 @@ body{
 	background: red;
 }
 li{list-style: none;}
-.focus-bar-wraper{margin: 1000px auto;position: relative;width: 1000px;}
+.focus-bar-wraper{margin: 0 auto;position: relative;width: 1000px;}
 .focus-bar-box{margin: 0 auto;position: relative;width: 1000px;height: 255px;overflow: hidden;}
 .focus-bar {width: 7000px;height: 255px;margin-left: 0;}
 .focus-bar .focus-poster {float: left;position: relative;width: 1000px;height: 255px;}
@@ -39,7 +39,7 @@ li{list-style: none;}
 				<div class="focus-bar-wraper" id="focus-bar-wraper">
 					<div class="focus-bar-box" id="focus-bar-box">
 						<ul class="focus-bar clearfix" id="focus-bar">
-							<li class="focus-poster  " data-index='1'>
+							<li class="focus-poster" data-index='1'>
 								<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
 								<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg" class="test2img">
 								<img src="http://p5.qhimg.com/t01cd30a2c24459f9ab.png" class="test2img">
@@ -48,7 +48,7 @@ li{list-style: none;}
 							</li>
 							<li class="focus-poster sedcond" data-index='2'>
 								<a href="/tv/QblvcKKqRGDqOH.html" class="item1 le-hint">
-								<img src="http://p3.qhimg.com/t01939d80c70f956164.jpg">
+								<img src="http://p4.qhimg.com/t01b9f3926ca3ff1181.jpg">
 					            </a>
 								<a class="num">2</a>
 							</li>
@@ -95,7 +95,7 @@ li{list-style: none;}
 
 
 	<script src="http://s0.qhimg.com/lib/jquery/1102.js"></script>
-	<script type="text/javascript" src="jquery-sliders-myself-1.6.js"></script>
+	<script type="text/javascript" src="jquery-sliders-myself-1.8.js"></script>
 
 	<script>
 	var wraper = $('#focus-bar-wraper'),
@@ -105,7 +105,7 @@ li{list-style: none;}
 		ul_content = $('#focus-bar'),
 		ul_navList = $('#focus-change');
 	var elSlide = new Slide(wraperUl, next_btn, next_prev, ul_content, ul_navList,wraper, {
-		fouseNum: 4
+		fouseNum: 0
 	});
 	elSlide.init();
 

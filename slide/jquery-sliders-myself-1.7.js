@@ -5,7 +5,6 @@
 1. 修改代码细节
 2. 添加lazyload
 3. 判断是否在可视区域,再执行动画.
-
 *****/
 
 (function() {
@@ -28,6 +27,13 @@
 		this.t = null;
 		//显示区域宽度
 		this.cellwidth = wraperBox.width();
+
+		//刚刚开始的时间
+		this.startTime=null;
+		//动画被调用的时间
+		this.newStartTime=null;
+		//一个动画运行时间内触发动画的
+
 		//slide元素在浏览器的位置
 		this.slideSize = {
 			left: wraper.offset().left,
@@ -43,61 +49,91 @@
 			speed: 3000,
 			autoplay: true,
 			hasList: true,
-			lazyloadType: 'img',
-			animateTime : 500
-
+			lazyloadType: 'img'
 		};
 		return $.extend(this.option, options || {})
 	};
 	Slide.prototype.firstShow = function(index) {
 		if (this.lazyloadType == 'img') {
-			this.imgLazyload();
+			this.imgLazyload(this.fouseNum);
 		}
 		this.ulContent.css('margin-left', '-' + index * this.cellwidth + 'px');
 		this.changeClass(this.fouseNum, 'on');
 	}
+
 	//向右运动
 	Slide.prototype.rightMove = function(index) {
+		console.log(index,this.fouseNum);
 		if (index > this.Lilength - 1) index = 0;
 		if (this.ulContentLi[this.fouseNum].offsetLeft < this.ulContentLi[index].offsetLeft) {
+			console.log('margincurrent:',this.ulContent.css('margin-left'));
 			var changeLeft = parseInt(this.ulContent.css('margin-left')) - parseInt(this.cellwidth);
 			this.ulContent.css('margin-left', changeLeft + 'px');
 		}
 		$(this.ulContentLi[index]).insertBefore(this.ulContentLi[this.fouseNum]);
-		this.fouseNum = index;
-		this.moveSlide('right');
-		this.changeClass(this.fouseNum, 'on');
+		var distance = (-parseInt(this.ulContent.css('margin-left')))%this.cellwidth
+		console.log(distance);
+		console.log('margin:',distance,index);
+		this.moveSlide('right',distance);
+		this.changeClass(index, 'on');
 	}
+
 	//向左运动
 	Slide.prototype.leftMove = function(index) {
 		if (index < 0) index = this.Lilength - 1;
+		console.log('margincurrent:',this.ulContent.css('margin-left'));
 		if (this.ulContentLi[this.fouseNum].offsetLeft > this.ulContentLi[index].offsetLeft) {
 			var changeLeft = parseInt(this.ulContent.css('margin-left')) + parseInt(this.cellwidth);
 			this.ulContent.css('margin-left', changeLeft + 'px');
 		}
 		$(this.ulContentLi[index]).insertAfter(this.ulContentLi[this.fouseNum]);
 		this.fouseNum = index;
-		this.moveSlide('left');
+		this.moveSlide('left',index);
 		this.changeClass(this.fouseNum, 'on');
 	}
-	Slide.prototype.moveSlide = function(direction) {
+	// Slide.prototype.quickMove = function(){
+	// 	return  this.newStartTime - this.startTime
+	// }
+	Slide.prototype.moveSlide = function(direction,distance,index) {
 		if (this.lazyloadType == 'img') {
-			this.imgLazyload();
+			this.imgLazyload(index);
 		}
+		//没有偏差的时候
+		if(distance==0) distance=1000;
+
+		//用前后时间差来算比列，得到差值距离会不准确。
+		// var timeDifference = this.quickMove(),
+		// 	realMoveWidth;
+		// if (timeDifference > 0 && timeDifference < 1500) {
+		// 	var addMoveWidth = this.cellwidth * (1500-timeDifference)/1500;
+		// }
+		// if(addMoveWidth)
+		// {
+		// 	realMoveWidth = this.cellwidth + addMoveWidth;
+		// 	console.log(realMoveWidth);
+		// }else{
+		// 	realMoveWidth = this.cellwidth;
+		// 	console.log(realMoveWidth);
+
+		// }
+		// this.startTime = new Date();
+
 		if (direction === 'left') {
 			this.ulContent.animate({
-				'margin-left': '-=' + this.cellwidth + 'px'
-			},this.animateTime);
+				'margin-left': '-=' + realMoveWidth + 'px'
+			},1500);
 		}
 		if (direction === 'right') {
 			this.ulContent.animate({
-				'margin-left': '+=' + this.cellwidth + 'px'
-			},this.animateTime);
+				'margin-left': '+=' +  distance + 'px'
+			},1500,function(){
+				this.fouseNum = index;
+			});
 		}
 	}
 	//后面显示的图片延迟加载
-	Slide.prototype.imgLazyload = function() {
-		var curSrcImg = $(this.ulContentLi[this.fouseNum]).find('img');
+	Slide.prototype.imgLazyload = function(index) {
+		var curSrcImg = $(this.ulContentLi[index]).find('img');
 		for (var i = 0; i < curSrcImg.length; i++) {
 			var imgDatasrc = $(curSrcImg[i]).attr("data-src");
 			if (imgDatasrc) {
@@ -137,12 +173,14 @@
 		var _this = this;
 		// 点击按钮向上翻
 		_this.preBtn.on('click', function() {
-			_this.ulContent.stop(true, true);
+			_this.ulContent.stop(false ,  false);
+			_this.newStartTime=new Date();
 			_this.leftMove(_this.fouseNum - 1);
 		})
 		// 点击按钮向下翻
 		_this.nextBtn.on('click', function() {
-			_this.ulContent.stop(true, true);
+			_this.ulContent.stop(false , false);
+			_this.newStartTime=new Date();
 			_this.rightMove(_this.fouseNum + 1);
 		})
 		_this.wraper.on('mouseenter', function() {
@@ -153,13 +191,16 @@
 		})
 		_this.wraper.on('mouseleave', function() {
 			// 鼠标移出开始动画
-			_this.doSlide();
+			// _this.doSlide();
 			_this.preBtn.hide();
 			_this.nextBtn.hide();
 		});
 		//鼠标移入nav的li
 		_this.navli.on('mouseenter', function() {
-			_this.ulContent.stop(true, true);
+
+			_this.ulContent.stop(false , false);
+			_this.newStartTime=new Date();
+
 			var curli = _this.ulList.find('.on')
 			var preindex = _this.navli.index(curli);
 			var curindex = _this.navli.index($(this));
@@ -180,7 +221,7 @@
 		this.firstShow(this.fouseNum);
 
 		if (this.autoplay) {
-			this.doSlide();
+			// this.doSlide();
 		}
 		this.bindEvent();
 	};
